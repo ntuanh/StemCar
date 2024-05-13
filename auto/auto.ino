@@ -13,6 +13,8 @@ int left_down = 5 ;
 int right_up = 6 ;
 int right_down  = 7 ;
 
+int f = 1  ;
+int *ptr = &f ;
 
 
 // setup 
@@ -37,9 +39,16 @@ void loop() {
   SERVO(90);
   if (distance() > max_distance )GO(0,1);
   else {
-    check();
-    if (distance() < max_distance )GO(0,-1);
-  }
+    stop() ;
+    *ptr = 0;
+    check(ptr);
+    while ( *ptr == 0){
+      GO(0,-1);
+      delay(200);
+      stop();
+      check(ptr);
+    }
+}
 }
 
 // function
@@ -122,26 +131,32 @@ void GO(int x , int y  ){
             right(-1);
             left(1);
             delay(time);
+            stop();
         }else {
             right(1);
             left(-1);
             delay(time);
+            stop();
         }
     }
 }
 
-void check(){
+void check( int *ptr ){
+  int d = 0; 
   SERVO(0);
   if(distance() > max_distance + 5){
     GO(1,0);
     SERVO(90);
+    d = 1 ;
   }else {
     SERVO(180);
     if( distance() > max_distance +5){
       GO(-1, 0);
       SERVO(90);
+      d = 1 ;
     }
   }
+  *ptr = d ;
   delay(100);
 }
 
