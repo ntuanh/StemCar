@@ -1,7 +1,6 @@
 #include<Servo.h>
 // Khai báo 
-int time  = 100 ;
-const int max_distance = 25 ;
+const int max_distance = 20 ;
 Servo myservo; 
 const int servo = 10 ;
 
@@ -15,6 +14,8 @@ int right_down  = 7 ;
 
 int f = 1  ;
 int *ptr = &f ;
+
+int dis  ;
 
 
 // setup 
@@ -30,14 +31,19 @@ void setup() {
     pinMode(left_up , OUTPUT);
     pinMode(right_down , OUTPUT);
     pinMode(right_up , OUTPUT);
-} 
+
+    dis = distance();
+    delay(1000);
+  } 
 
 
 
 // loop
+
 void loop() {
-  SERVO(90);
-  if (distance() > max_distance )GO(0,1);
+  dis = distance();
+  Serial.println(dis);
+  if (dis > max_distance ){GO(0,1);delay(100);}
   else {
     stop() ;
     *ptr = 0;
@@ -48,15 +54,41 @@ void loop() {
       stop();
       check(ptr);
     }
+    SERVO(90);
 }
 }
 
+
+// loop for distance right and left
+/*
+void loop(){
+  SERVO(0);
+  delay(500);
+  Serial.print("goc quay : 0 do ");
+  Serial.println(distance());
+  delay(2000);
+
+  SERVO(90);
+  delay(500);
+  Serial.print("goc quay : 90 do ");
+  Serial.println(distance()); 
+  delay(2000);
+
+  SERVO(180);
+  delay(500);
+  Serial.print("goc quay : 180 ");
+  Serial.println(distance()); 
+  delay(2000); 
+}
+*/
 // function
 
 void SERVO(int n ){
   myservo.write(n);
-  //Serial.println(distance());
-  //delay(450);
+  Serial.print(n) ;
+  Serial.print("  khoang cach ");
+  Serial.println(distance());
+  delay(400);
 }
 
 int distance(){
@@ -88,7 +120,7 @@ void stop(){
     digitalWrite(right_down , 0);
     digitalWrite(left_down, 0);
     digitalWrite(left_up, 0);
-    //delay(time);
+    delay(200);
 
 }
 
@@ -114,7 +146,7 @@ void left( int n ){
 // function premium 
 
 void GO(int x , int y  ){
-  int time = 250 ;
+  int time = 275 ;
     if (x == 0 ){
         if ( y == 1 ){
             right(1);
